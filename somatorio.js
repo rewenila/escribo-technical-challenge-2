@@ -1,4 +1,4 @@
-function somatorioDivisiveis(numero) {
+function somatorioMultiplos(numero) {
   let soma = 0;
 
   for (let i = 3; i < numero; i++) {
@@ -10,5 +10,5 @@ function somatorioDivisiveis(numero) {
   return soma;
 }
 
-module.exports = somatorioDivisiveis;
+module.exports = somatorioMultiplos;
 

@@ -1,4 +1,4 @@
-const somatorioDivisiveis = require('./somatorio');
+const somatorioMultiplos = require('./somatorio');
 
-console.log(somatorioDivisiveis(10)); // Saída esperada: 23
-console.log(somatorioDivisiveis(11)); // Saída esperada: 33
+console.log(somatorioMultiplos(10)); // Saída esperada: 23
+console.log(somatorioMultiplos(11)); // Saída esperada: 33
