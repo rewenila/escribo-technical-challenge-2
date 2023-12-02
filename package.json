@@ -1,0 +1,23 @@
+{
+  "name": "escribo-technical-test-2",
+  "version": "1.0.0",
+  "description": "Este projeto contém uma função em JavaScript que calcula o somatório de todos os valores inteiros divisíveis por 3 ou 5 que sejam inferiores a um número fornecido.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
