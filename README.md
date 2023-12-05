@@ -1,29 +1,86 @@
-# Somatório de Múltiplos de 3 ou 5
+# My API
 
-Este projeto contém uma função em JavaScript que calcula o somatório de todos os valores inteiros divisíveis por 3 ou 5 que sejam inferiores a um número fornecido.
+This API provides user authentication and user-related functionalities.
 
-## Como Usar
+## Getting Started
 
-1. Clone este repositório para o seu ambiente local.
+To get started with this API, follow these steps:
 
-2. Certifique-se de ter o Node.js instalado na sua máquina.
+### Prerequisites
 
-3. Abra o terminal e navegue até o diretório do projeto.
+- Node.js installed
+- MongoDB Atlas account
 
-4. No terminal, execute o arquivo `index.js` para testar a função `somatorioMultiplos` com diferentes números:
+### Installation
 
-```bash
-node index.js
-```
-## Exemplo de uso
+1. Clone the repository.
+2. Install dependencies by running:
 
-A função `somatorioMultiplos` recebe um número inteiro positivo como parâmetro e retorna o somatório de todos os valores menores que esse número e divisíveis por 3 ou 5.
+````
+npm install
+````
 
-Exemplo de uso:
+3. Set up environment variables:
+- Create a `.env` file based on the `.env.example` provided.
+- Fill in the necessary values for variables like `DB_USER`, `DB_PASS`, and `SECRET`.
 
-```bash
-const somatorioMultiplos = require('./somatorio');
+### Running the API
 
-console.log(somatorioMultiplos(10)); // Saída esperada: 23
-console.log(somatorioMultiplos(11)); // Saída esperada: 33
-```
+To run the API, execute the following command:
+
+````
+npm start
+````
+
+
+The API will start running on `http://localhost:3000`.
+
+## Endpoints
+
+### GET /
+
+- Description: Welcome message
+- Public Access: Yes
+- Endpoint: `/`
+
+### POST /auth/register
+
+- Description: Register a new user
+- Public Access: Yes
+- Endpoint: `/auth/register`
+- Request Body: JSON with `name`, `email`, `password`, `confirmpassword`, and `phone`
+
+### POST /auth/login
+
+- Description: Log in existing user
+- Public Access: Yes
+- Endpoint: `/auth/login`
+- Request Body: JSON with `email` and `password`
+
+### GET /user/:id
+
+- Description: Get user details by ID
+- Public Access: No
+- Endpoint: `/user/:id`
+- Request Headers: `Authorization` with JWT token
+
+## Models
+
+### User
+
+- Fields:
+  - `name`: String
+  - `email`: String
+  - `password`: String
+  - `phone`: Object containing `number` and `ddd`
+  - `date_creation`: String
+  - `date_update`: String
+  - `last_login`: String
+
+## Authentication
+
+This API uses JSON Web Tokens (JWT) for authentication. To access protected routes, include the JWT token in the `Authorization` header.
+
+## Database
+
+This API uses MongoDB for data storage. Ensure you have the MongoDB connection string set in the environment variables.

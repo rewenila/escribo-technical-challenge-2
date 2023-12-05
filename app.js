@@ -1,9 +1,11 @@
 // imports
 require('dotenv').config()
+
 const express = require('express')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 
 const app = express()
 
@@ -15,7 +17,7 @@ const User = require('./models/User')
 
 // open route - public route
 app.get('/', (req, res) => {
-  res.status(200).json({ msg: "Bem vindo à nossa API!" })
+  res.status(200).json({ msg: "Bem vindo à minha API!" })
 })
 
 // private route
@@ -58,7 +60,7 @@ function checkToken(req, res, next) {
 // register user
 app.post('/auth/register', async(req, res) => {
 
-  const {name, email, password, confirmpassword} = req.body
+  const {name, email, password, confirmpassword, phone} = req.body
 
   // validations
   if(!name) {
@@ -77,7 +79,11 @@ app.post('/auth/register', async(req, res) => {
     return res.status(422).json({ msg: 'As senhas não conferem.' })
   }
 
-  // check if user exists
+  if(!phone) {
+    return res.status(422).json({ msg: 'O telefone é obrigatório.' })
+  }
+
+  // check if user already exists
   const userExists = await User.findOne({ email: email })
 
   if (userExists) {
@@ -88,11 +94,18 @@ app.post('/auth/register', async(req, res) => {
   const salt = await bcrypt.genSalt(12)
   const passwordHash = await bcrypt.hash(password, salt)
 
+  // get current date and time
+  const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+
   // create user
   const user = new User({
     name,
     email,
     password: passwordHash,
+    phone,
+    date_creation: currentDateTime,
+    date_update: currentDateTime,
+    last_login: null,
   })
 
   try {
@@ -135,9 +148,20 @@ app.post("/auth/login", async (req, res) => {
     return res.status(422).json({ msg: 'Senha inválida.' })
   }
 
-  try {
-    const secret = process.env.SECRET
+  // get current date and time
+  const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
 
+  // update user last login
+  user.last_login = currentDateTime
+
+  try {
+    await user.save()
+    
+    const id = user.id
+    const date_creation = user.date_creation
+    const date_update = user.date_update
+    const last_login = user.last_login
+    const secret = process.env.SECRET
     const token = jwt.sign(
       {
         id: user._id,
@@ -145,7 +169,7 @@ app.post("/auth/login", async (req, res) => {
       secret,
     )
 
-    res.status(200).json({ msg: 'Autenticação realizada com sucesso.', token })
+    res.status(200).json({ msg: 'Autenticação realizada com sucesso.', id, date_creation, date_update, last_login, token })
 
   } catch(err) {
     console.log(err)
@@ -158,9 +182,10 @@ app.post("/auth/login", async (req, res) => {
 })
 
 // credentials
+
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
-
+ 
 mongoose
     .connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.rptmwya.mongodb.net/?retryWrites=true&w=majority`)
     .then(() => {
@@ -168,5 +193,3 @@ mongoose
         console.log('Conectou ao banco.')
     })
     .catch((err) => console.log(err))
-
-
